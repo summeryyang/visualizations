@@ -1,0 +1,50 @@
+### Salary Distribution by Season
+
+ui <- fluidPage(
+  titlePanel("NBA Player Salary Distribution"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("bins",
+                  "Number of bins:",
+                  min = 50,
+                  max = 100,
+                  step = 5,
+                  value = 75),
+      selectInput("selected_year",
+                  label = "Select Year:",
+                  choices = unique(nba.salary$Season),
+                  selected = "2020-2021"
+      )
+    ),
+    
+    mainPanel(
+      plotlyOutput("salary.dist")
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  # Render the plot with Plotly
+  output$salary.dist <- renderPlotly({
+    
+    # Filter the dataset based on the selected year
+    filtered_data <- nba.salary %>% filter(Season == input$selected_year)
+    
+    # Create the ggplot
+    nba_ggplot <- filtered_data %>%
+      ggplot(aes(x = Salary)) + 
+      geom_histogram(color="black", fill='lightblue', position="dodge", bins = input$bins) +
+      labs(title = "NBA Player Salary Distribution",
+           x = "Salary (USD)",
+           y = "Count of Players") +
+      theme_minimal()
+    
+    # Convert the ggplot to an interactive Plotly plot
+    ggplotly(nba_ggplot)
+  })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
