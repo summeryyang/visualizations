@@ -4,7 +4,7 @@ library(ggplot2)
 library(dplyr)
 library(reactable)
 
-nba.salary <- read.csv("/Users/summeryang/Downloads/SMU/MDSAS/Sports Analytics/Project/nbasalary.csv")
+nba.salary <- read.csv("nbasalary.csv")
 
 # UI
 ui <- fluidPage(
